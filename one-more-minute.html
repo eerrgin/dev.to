@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101114">
+<meta name="description" content="An interactive reflection on attention, time, and the small choices that shape a life.">
+<title>One More Minute — An Attention Experiment</title>
+<style>
+:root{color-scheme:dark;--bg:#101114;--panel:#191b21;--ink:#f0eee8;--muted:#a5a6ad;--line:#30323a;--accent:#c5f277;--warm:#ffb88c;--radius:22px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 80% 0%,#272a31 0,transparent 36rem),var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.wrap{width:min(1100px,calc(100% - 36px));margin:auto}
+nav{display:flex;justify-content:space-between;align-items:center;padding:26px 0;border-bottom:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:750;letter-spacing:.02em}
+.mark{width:28px;height:28px;border-radius:50%;border:1px solid var(--accent);display:grid;place-items:center;color:var(--accent);font-size:13px}
+.nav-note{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase}
+.hero{padding:90px 0 68px;max-width:850px}
+.kicker{color:var(--accent);font-size:.78rem;font-weight:750;letter-spacing:.16em;text-transform:uppercase}
+h1{font-size:clamp(3.2rem,9vw,7.6rem);letter-spacing:-.075em;line-height:.94;margin:22px 0 28px;font-weight:760}
+h1 em{font-family:Georgia,serif;font-weight:400;color:var(--accent)}
+.lede{max-width:650px;color:#c5c5ca;font-size:clamp(1.1rem,2.3vw,1.35rem)}
+.hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:28px;color:var(--muted);font-size:.85rem}
+.dot{color:var(--accent);padding-right:7px}
+main{padding-bottom:80px}
+.experiment{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch}
+.panel{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,#1b1d23,#15161a);padding:clamp(22px,4vw,38px)}
+.panel h2{font-size:1.55rem;letter-spacing:-.04em;margin:0 0 8px}
+.sub{color:var(--muted);font-size:.94rem;margin:0 0 28px}
+.time-display{display:flex;align-items:baseline;gap:10px;margin:24px 0 18px}
+.time-display strong{font-size:clamp(3.6rem,8vw,5.5rem);line-height:1;letter-spacing:-.07em;font-variant-numeric:tabular-nums}
+.time-display span{color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--accent);margin:12px 0 5px}
+.range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:26px}
+.choice{padding:13px 14px;border-radius:13px;background:#22242a;border:1px solid #3b3d45;color:var(--ink);text-align:left;transition:.2s}
+.choice:hover,.choice:focus-visible{border-color:var(--accent);outline:none;transform:translateY(-1px)}
+.choice small{display:block;color:var(--muted);font-size:.77rem;margin-top:3px}
+.big-stat{font-size:clamp(2.5rem,6vw,4rem);letter-spacing:-.07em;line-height:1.05;margin:24px 0 8px;color:var(--accent)}
+.stat-caption{color:var(--muted);font-size:.9rem}
+.bar-area{margin:28px 0}
+.bar-row{display:grid;grid-template-columns:86px 1fr 48px;gap:10px;align-items:center;margin:14px 0;font-size:.82rem}
+.bar-track{height:9px;background:#30323a;border-radius:20px;overflow:hidden}
+.bar-fill{height:100%;width:0;background:var(--accent);border-radius:20px;transition:width .45s ease}
+.bar-row:nth-child(2) .bar-fill{background:var(--warm)}
+.bar-row:nth-child(3) .bar-fill{background:#9ba4ff}
+.bar-value{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.insight{border-left:2px solid var(--accent);padding:3px 0 3px 16px;margin-top:26px;color:#d7d7d8}
+.insight strong{color:var(--ink)}
+.section{padding:76px 0 0}
+.section-head{display:grid;grid-template-columns:.7fr 1.3fr;gap:30px;align-items:start;margin-bottom:28px}
+.section-head h2{font-size:clamp(2rem,4vw,3.4rem);line-height:1.03;letter-spacing:-.06em;margin:0}
+.section-head p{color:var(--muted);max-width:560px;margin:0}
+.questions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.question{padding:25px;border-top:1px solid var(--line);background:linear-gradient(180deg,#191b20,transparent);border-radius:0 0 16px 16px}
+.question .num{color:var(--accent);font-size:.8rem;letter-spacing:.1em}
+.question h3{font-size:1.15rem;line-height:1.35;margin:16px 0 10px}
+.question p{font-size:.91rem;color:var(--muted);margin:0}
+.reflection{margin-top:72px;padding:clamp(28px,6vw,58px);border-radius:var(--radius);background:var(--accent);color:#151711;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end}
+.reflection h2{font-size:clamp(2rem,5vw,4rem);line-height:1;letter-spacing:-.065em;margin:12px 0 16px;max-width:680px}
+.reflection p{max-width:600px;margin:0;color:#343a29}
+.reflection button{background:#171914;color:#f4f5ee;border:0;border-radius:999px;padding:14px 20px;white-space:nowrap;font-weight:650}
+.reflection button:hover{background:#33382b}
+footer{border-top:1px solid var(--line);padding:24px 0 34px;color:var(--muted);font-size:.82rem;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#f0eee8;color:#151515;padding:12px 18px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:.25s;box-shadow:0 8px 30px #0006}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:760px){.hero{padding:66px 0 48px}.experiment{grid-template-columns:1fr}.section-head{grid-template-columns:1fr;gap:14px}.questions{grid-template-columns:1fr}.reflection{grid-template-columns:1fr}.reflection button{justify-self:start}.nav-note{display:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav aria-label="Main navigation">
+    <div class="brand"><span class="mark">◷</span> THE ATTENTION LAB</div>
+    <div class="nav-note">A tiny experiment in being human</div>
+  </nav>
+
+  <header class="hero">
+    <div class="kicker">Experiment 001 · Time is the material</div>
+    <h1>One more<br><em>minute.</em></h1>
+    <p class="lede">A minute never looks expensive when you spend it. This little experiment asks a quieter question: what does it become when you spend it again, and again, and again?</p>
+    <div class="hero-meta"><span><span class="dot">●</span>No sign-up</span><span><span class="dot">●</span>Runs entirely in your browser</span><span><span class="dot">●</span>Your choices stay yours</span></div>
+  </header>
+
+  <main>
+    <section class="experiment" aria-label="Interactive time experiment">
+      <div class="panel">
+        <h2>Spend a little time</h2>
+        <p class="sub">Imagine a habit that takes this many minutes each day. Adjust the slider and watch a small choice stretch across a year.</p>
+        <div class="time-display"><strong id="minutesValue">30</strong><span>minutes / day</span></div>
+        <label for="minutes" class="sub" style="display:block;margin-bottom:0">Daily time spent on one repeated habit</label>
+        <input id="minutes" type="range" min="1" max="240" value="30" step="1" aria-describedby="rangeHelp">
+        <div class="range-labels" id="rangeHelp"><span>1 minute</span><span>4 hours</span></div>
+        <div class="choices">
+          <button class="choice" data-minutes="10">A quick check<small>10 minutes a day</small></button>
+          <button class="choice" data-minutes="30">A familiar scroll<small>30 minutes a day</small></button>
+          <button class="choice" data-minutes="60">Just an hour<small>60 minutes a day</small></button>
+          <button class="choice" data-minutes="120">The evening goes<small>2 hours a day</small></button>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>The year, translated</h2>
+        <p class="sub">Not a prediction. Just arithmetic, with enough room for a thought.</p>
+        <div class="big-stat" id="yearHours">182.5 hours</div>
+        <div class="stat-caption">of your year, spent on this one repeated choice</div>
+        <div class="bar-area" aria-label="Annual time comparisons">
+          <div class="bar-row"><span>Days</span><div class="bar-track"><div class="bar-fill" id="daysBar"></div></div><span class="bar-value" id="daysValue">7.6</span></div>
+          <div class="bar-row"><span>Workdays</span><div class="bar-track"><div class="bar-fill" id="workBar"></div></div><span class="bar-value" id="workValue">22.8</span></div>
+          <div class="bar-row"><span>Books*</span><div class="bar-track"><div class="bar-fill" id="booksBar"></div></div><span class="bar-value" id="booksValue">9.1</span></div>
+        </div>
+        <div class="insight" aria-live="polite" id="insight"><strong>One ordinary choice.</strong> About 7.6 full days over a year, if you count only the minutes.</div>
+        <p style="font-size:.76rem;color:var(--muted);margin:22px 0 0">*Illustrative comparisons: 8-hour workdays and 20-hour reading time per book. Your actual life will differ.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="kicker">Beyond the calculator</div>
+        <h2>Time isn't the only thing being spent.</h2>
+        <p>The point isn't that scrolling is bad or productivity is sacred. Rest matters. Play matters. So does choosing, instead of drifting into a choice. The same number can mean escape, connection, curiosity, or avoidance.</p>
+      </div>
+      <div class="questions">
+        <article class="question"><span class="num">01 / NOTICE</span><h3>Did you choose it, or did it choose you?</h3><p>Some habits begin as decisions and become the default setting. Noticing the difference is already a form of agency.</p></article>
+        <article class="question"><span class="num">02 / VALUE</span><h3>What would make the time feel well spent?</h3><p>There is no universal answer. A quiet hour can restore you; a busy hour can empty you. The label matters less than the experience.</p></article>
+        <article class="question"><span class="num">03 / EXPERIMENT</span><h3>What happens if you change just ten minutes?</h3><p>You don't need a grand reinvention. Try a tiny change for a week, pay attention, and keep what genuinely helps.</p></article>
+      </div>
+    </section>
+
+    <section class="reflection">
+      <div>
+        <div class="kicker" style="color:#485432">A question to take with you</div>
+        <h2>If your time could leave a review, what would it say about today?</h2>
+        <p>No score. No streak. No account to create. Just a moment to decide what you want your attention to serve next.</p>
+      </div>
+      <button id="reflectBtn" type="button">Give me a prompt ↗</button>
+    </section>
+  </main>
+
+  <footer><span>THE ATTENTION LAB · A one-file web experiment</span><span>Made for curiosity, not guilt.</span></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  const slider = document.getElementById('minutes');
+  const minutesValue = document.getElementById('minutesValue');
+  const yearHours = document.getElementById('yearHours');
+  const daysBar = document.getElementById('daysBar');
+  const workBar = document.getElementById('workBar');
+  const booksBar = document.getElementById('booksBar');
+  const daysValue = document.getElementById('daysValue');
+  const workValue = document.getElementById('workValue');
+  const booksValue = document.getElementById('booksValue');
+  const insight = document.getElementById('insight');
+
+  function update(value) {
+    const mins = Number(value);
+    const hours = mins * 365 / 60;
+    const days = hours / 24;
+    const workdays = hours / 8;
+    const books = hours / 20;
+    minutesValue.textContent = mins;
+    yearHours.textContent = hours.toLocaleString(undefined, {maximumFractionDigits: 1}) + ' hours';
+    daysValue.textContent = days.toFixed(1);
+    workValue.textContent = workdays.toFixed(1);
+    booksValue.textContent = books.toFixed(1);
+    daysBar.style.width = Math.min(days / 30 * 100, 100) + '%';
+    workBar.style.width = Math.min(workdays / 40 * 100, 100) + '%';
+    booksBar.style.width = Math.min(books / 50 * 100, 100) + '%';
+
+    let line;
+    if (mins <= 15) line = 'A small slice of time. Small does not mean meaningless; it means the choice is easy to overlook.';
+    else if (mins <= 45) line = 'A quiet accumulation. The minutes don’t announce themselves, but the year remembers them.';
+    else if (mins <= 90) line = 'This adds up to more than a week of full days. That may be worthwhile, or worth reconsidering.';
+    else line = 'A substantial part of the year. No judgment attached: just enough scale to ask whether it matches your intention.';
+    insight.innerHTML = '<strong>One ordinary choice.</strong> ' + line;
+  }
+  slider.addEventListener('input', event => update(event.target.value));
+  document.querySelectorAll('[data-minutes]').forEach(button => {
+    button.addEventListener('click', () => {
+      slider.value = button.dataset.minutes;
+      update(slider.value);
+    });
+  });
+
+  const prompts = [
+    'What did you give your best attention to today?',
+    'What did you do because you wanted to, not because it was the easiest next thing?',
+    'What deserves ten uninterrupted minutes from you tomorrow?',
+    'Which part of today would you choose to experience again?',
+    'What are you calling “wasted time” that might actually have helped you recover?'
+  ];
+  let promptIndex = -1;
+  const toast = document.getElementById('toast');
+  document.getElementById('reflectBtn').addEventListener('click', () => {
+    promptIndex = (promptIndex + 1) % prompts.length;
+    toast.textContent = prompts[promptIndex];
+    toast.classList.add('show');
+    window.clearTimeout(toast._hideTimer);
+    toast._hideTimer = window.setTimeout(() => toast.classList.remove('show'), 4200);
+  });
+
+  update(slider.value);
+})();
+</script>
+</body>
+</html>
